@@ -20,6 +20,8 @@ import AdminRoute from "./AdminRoute";
 import UserDetails from "../pages/users/UserDetails";
 import EditUser from "../pages/users/EditUser";
 import TransactionDetails from "../pages/transactions/TransactionDetails";
+import KnowledgeCenter from "../pages/knowledgeCenter/KnowledgeCenter";
+import NewsletterSubscribers from "../pages/newsletter/NewsletterSubscribers";
 
 const AppRoutes = () => {
   return (
@@ -121,12 +123,32 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Knowledge Center */}
+      <Route
+        path="/knowledge-center"
+        element={
+          <AdminRoute>
+            <KnowledgeCenter />
+          </AdminRoute>
+        }
+      />
+
       {/* Analytics */}
       <Route
         path="/analytics"
         element={
           <AdminRoute>
             <Analytics />
+          </AdminRoute>
+        }
+      />
+
+      {/* NewsLetter*/}
+      <Route
+        path="/newsletter"
+        element={
+          <AdminRoute>
+            <NewsletterSubscribers />
           </AdminRoute>
         }
       />

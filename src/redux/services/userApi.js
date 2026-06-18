@@ -22,7 +22,7 @@ export const userApi = baseApi.injectEndpoints({
       query: ({ id, ...data }) => ({
         url: `/admin/users/${id}`,
         method: "PUT",
-        body: data,
+        data,
       }),
       invalidatesTags: ["Users"],
     }),

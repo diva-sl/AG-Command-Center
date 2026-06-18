@@ -5,6 +5,7 @@ import {
   FileText,
   BarChart3,
   Settings,
+  Mail,
 } from "lucide-react";
 
 export const sidebarLinks = [
@@ -32,6 +33,11 @@ export const sidebarLinks = [
     name: "Analytics",
     path: "/analytics",
     icon: BarChart3,
+  },
+  {
+    name: "Newsletter",
+    path: "/newsletter",
+    icon: Mail,
   },
   {
     name: "Settings",

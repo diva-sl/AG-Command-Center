@@ -10,6 +10,7 @@ import {
   useGetUserByIdQuery,
   useUpdateUserMutation,
 } from "../../redux/services/userApi";
+import { useGetPlansQuery } from "../../redux/services/planApi";
 
 const EditUser = () => {
   const { id } = useParams();
@@ -18,6 +19,8 @@ const EditUser = () => {
   const { data: user, isLoading } = useGetUserByIdQuery(id);
 
   const [updateUser, { isLoading: updating }] = useUpdateUserMutation();
+
+  const { data: plans = [] } = useGetPlansQuery();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,6 +35,8 @@ const EditUser = () => {
     subscriptionExpiry: "",
     isBlocked: false,
   });
+
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -55,6 +60,10 @@ const EditUser = () => {
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
+    if (name === "subscription") {
+      const plan = plans.find((p) => p.name === value);
+      setSelectedPlan(plan || null);
+    }
 
     setFormData((prev) => ({
       ...prev,
@@ -282,10 +291,36 @@ const EditUser = () => {
                 </select>
               </div>
 
+              {selectedPlan && (
+                <div className="mt-3 bg-green-50 border border-green-200 rounded-xl p-4">
+                  <h4 className="font-semibold text-green-700">Plan Details</h4>
+
+                  <p>Price: ₹{selectedPlan.price}</p>
+
+                  {selectedPlan.originalPrice && (
+                    <p>MRP: ₹{selectedPlan.originalPrice}</p>
+                  )}
+
+                  <p>Category: {selectedPlan.category}</p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium mb-2">
                   Subscription
                 </label>
+
+                {/* <select
+                  name="subscription"
+                  value={formData.subscription}
+                  onChange={handleChange}
+                  className="w-full border rounded-xl px-4 py-3"
+                >
+                  {/* <option value="none">None</option>
+                  <option value="basic">Basic</option>
+                  <option value="premium">Premium</option>
+                  <option value="corporate">Corporate</option> 
+                </select> */}
 
                 <select
                   name="subscription"
@@ -293,10 +328,13 @@ const EditUser = () => {
                   onChange={handleChange}
                   className="w-full border rounded-xl px-4 py-3"
                 >
-                  <option value="none">None</option>
-                  <option value="basic">Basic</option>
-                  <option value="premium">Premium</option>
-                  <option value="corporate">Corporate</option>
+                  <option value="none">No Subscription</option>
+
+                  {plans.map((plan) => (
+                    <option key={plan._id} value={plan.name}>
+                      {plan.name} - ₹{plan.price.toLocaleString()}
+                    </option>
+                  ))}
                 </select>
               </div>
 

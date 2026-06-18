@@ -59,6 +59,7 @@ const PlanModal = ({ open, onClose, onSubmit, plan }) => {
       ...form,
 
       price: Number(form.price),
+      duration: Number(form.duration),
 
       originalPrice: Number(form.originalPrice),
 

@@ -21,6 +21,11 @@ export const baseApi = createApi({
     "Settings",
     "Stories",
     "StoryAnalytics",
+    "KnowledgePost",
+    "KnowledgeCategory",
+    "KnowledgeQuestion",
+    "KnowledgeAnalytics",
+    "Newsletter",
   ],
 
   endpoints: () => ({}),

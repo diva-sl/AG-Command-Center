@@ -8,6 +8,7 @@ import {
   LogOut,
   Crown,
   BookOpen,
+  Mail,
 } from "lucide-react";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -68,11 +69,21 @@ const Sidebar = () => {
     //   path: "/success-stories/analytics",
     //   icon: BarChart3,
     // },
+    {
+      name: "Knowledge Center",
+      path: "/knowledge-center",
+      icon: BookOpen,
+    },
 
     {
       name: "Analytics",
       path: "/analytics",
       icon: BarChart3,
+    },
+    {
+      name: "Newsletter",
+      path: "/newsletter",
+      icon: Mail,
     },
 
     {
@@ -89,14 +100,41 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="h-screen bg-[#511D43] text-white w-72 flex flex-col">
-      <div className="p-6 border-b border-slate-700">
+    <aside
+      className="
+    h-screen
+    w-72
+
+    bg-[#511D43]
+    text-white
+
+    flex
+    flex-col
+
+    overflow-hidden
+  "
+    >
+      <div className="p-6 border-b border-white/10 shrink-0">
         <h1 className="text-2xl font-bold">AG Command Center</h1>
 
         <p className="text-slate-400 text-sm">Admin Dashboard</p>
       </div>
+      <nav
+        className="
+    flex-1
+    overflow-y-auto
 
-      <nav className="flex-1 p-4">
+    px-4
+    py-4
+
+    space-y-1
+
+    [&::-webkit-scrollbar]:w-1.5
+    [&::-webkit-scrollbar-track]:bg-transparent
+    [&::-webkit-scrollbar-thumb]:bg-white/20
+    [&::-webkit-scrollbar-thumb]:rounded-full
+  "
+      >
         {menuItems.map((item) => {
           const Icon = item.icon;
 
