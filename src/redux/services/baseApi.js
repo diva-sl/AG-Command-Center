@@ -7,7 +7,7 @@ export const baseApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl:
       import.meta.env.MODE === "production"
-        ? "https://ag-associates-backend.onrender.com/api"
+        ? "https://api.agandassociates.org/api"
         : "http://localhost:5001/api",
   }),
 
