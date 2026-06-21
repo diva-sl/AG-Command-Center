@@ -345,46 +345,94 @@ const StoryModal = ({ open, onClose, story }) => {
 
   if (!open) return null;
 
-  const inputStyle = `
+  const inputClass = `
 w-full
-border
-border-slate-300
+h-12
+px-4
 rounded-xl
+border
+border-slate-200
+bg-white
+text-slate-700
+placeholder:text-slate-400
+shadow-sm
+transition-all
+duration-300
+focus:outline-none
+focus:ring-4
+focus:ring-[#901E3E]/10
+focus:border-[#901E3E]
+`;
+
+  const textareaClass = `
+w-full
+min-h-[160px]
 px-4
 py-3
+rounded-xl
+border
+border-slate-200
 bg-white
+text-slate-700
+placeholder:text-slate-400
+shadow-sm
+resize-none
+transition-all
+duration-300
 focus:outline-none
-focus:ring-2
-focus:ring-[#901E3E]
-focus:border-transparent
-transition
+focus:ring-4
+focus:ring-[#901E3E]/10
+focus:border-[#901E3E]
+`;
+
+  const cardClass = `
+bg-white
+rounded-3xl
+border
+border-slate-200
+shadow-sm
+p-6
+lg:p-8
 `;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-2 md:p-4">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 md:p-6">
       <div
         className="
-        bg-white
-        w-full
-        max-w-7xl
-        h-[96vh]
-        rounded-3xl
-        shadow-2xl
-        overflow-hidden
-        flex
-        flex-col
-      "
+    bg-slate-50
+    w-full
+    max-w-7xl
+    h-[95vh]
+    rounded-3xl
+    overflow-hidden
+    shadow-2xl
+    flex
+    flex-col
+  "
       >
         {/* HEADER */}
-
-        <div className="bg-gradient-to-r from-[#511D43] via-[#6c2858] to-[#901E3E] px-5 md:px-8 py-5 text-white">
+        <div
+          className="
+  sticky
+  top-0
+  z-20
+  bg-gradient-to-r
+  from-[#511D43]
+  via-[#6a2555]
+  to-[#901E3E]
+  text-white
+  px-6
+  lg:px-8
+  py-5
+  "
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold">
+              <h2 className="text-2xl lg:text-3xl font-bold">
                 {story ? "Edit Success Story" : "Create Success Story"}
               </h2>
 
-              <p className="text-white/80 mt-1 text-sm">
+              <p className="text-white/80 text-sm mt-1">
                 AG Associates Success Story Management
               </p>
             </div>
@@ -392,21 +440,21 @@ transition
             <button
               onClick={onClose}
               className="
-              w-11 h-11
-              rounded-xl
-              bg-white/10
-              hover:bg-white/20
-              transition
-              flex
-              items-center
-              justify-center
-            "
+      h-11
+      w-11
+      rounded-xl
+      bg-white/10
+      hover:bg-white/20
+      flex
+      items-center
+      justify-center
+      transition
+      "
             >
               <X size={20} />
             </button>
           </div>
         </div>
-
         {/* FORM */}
 
         <form
@@ -421,23 +469,23 @@ transition
         >
           {/* BASIC INFO */}
 
-          <div className="bg-white rounded-3xl border shadow-sm p-6">
-            <h3 className="text-xl font-bold text-[#511D43] mb-5">
+          <div className={cardClass}>
+            <h3 className="text-xl font-bold text-[#511D43] mb-6">
               Basic Information
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               <input
+                className={inputClass}
+                placeholder="Story Title"
                 value={form.title}
                 onChange={(e) => updateField("title", e.target.value)}
-                placeholder="Story Title"
-                className="input"
               />
 
               <select
+                className={inputClass}
                 value={form.category}
                 onChange={(e) => updateField("category", e.target.value)}
-                className="input"
               >
                 <option>Tax Planning</option>
                 <option>Income Tax Filing</option>
@@ -448,218 +496,150 @@ transition
               </select>
 
               <input
+                className={inputClass}
+                placeholder="Industry"
                 value={form.industry}
                 onChange={(e) => updateField("industry", e.target.value)}
-                placeholder="Industry"
-                className="input"
               />
 
               <input
+                className={inputClass}
+                placeholder="Location"
                 value={form.location}
                 onChange={(e) => updateField("location", e.target.value)}
-                placeholder="Location"
-                className="input"
               />
 
               <input
+                className={inputClass}
+                placeholder="Company Size"
                 value={form.companySize}
                 onChange={(e) => updateField("companySize", e.target.value)}
-                placeholder="Company Size"
-                className="input"
               />
 
               <input
+                className={inputClass}
+                placeholder="Services Used"
                 value={form.services}
                 onChange={(e) => updateField("services", e.target.value)}
-                placeholder="Services Used"
-                className="input"
               />
             </div>
           </div>
-
           {/* STORY CONTENT */}
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-            {/* Challenge */}
-            <div className="bg-white rounded-2xl border shadow-sm p-5">
-              <h3 className="font-semibold text-[#511D43] mb-3">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-4">
                 Business Challenge
               </h3>
 
               <textarea
-                rows={5}
+                className={textareaClass}
                 value={form.challenge}
                 onChange={(e) => updateField("challenge", e.target.value)}
-                placeholder="Describe client challenge..."
-                className={inputStyle}
               />
             </div>
 
-            {/* Solution */}
-            <div className="bg-white rounded-2xl border shadow-sm p-5">
-              <h3 className="font-semibold text-[#511D43] mb-3">Solution</h3>
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-4">Solution</h3>
 
               <textarea
-                rows={5}
+                className={textareaClass}
                 value={form.solution}
                 onChange={(e) => updateField("solution", e.target.value)}
-                placeholder="Describe solution..."
-                className={inputStyle}
               />
             </div>
 
-            {/* Implementation */}
-            <div className="bg-white rounded-2xl border shadow-sm p-5">
-              <h3 className="font-semibold text-[#511D43] mb-3">
-                Implementation
-              </h3>
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-4">Implementation</h3>
 
               <textarea
-                rows={5}
+                className={textareaClass}
                 value={form.implementation}
                 onChange={(e) => updateField("implementation", e.target.value)}
-                placeholder="Implementation process..."
-                className={inputStyle}
               />
             </div>
 
-            {/* Outcome */}
-            <div className="bg-white rounded-2xl border shadow-sm p-5">
-              <h3 className="font-semibold text-[#511D43] mb-3">
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-4">
                 Outcome & Results
               </h3>
 
               <textarea
-                rows={5}
+                className={textareaClass}
                 value={form.outcome}
                 onChange={(e) => updateField("outcome", e.target.value)}
-                placeholder="Business outcomes..."
-                className={inputStyle}
               />
             </div>
           </div>
-          {/* METRICS */}
-
-          <div className="bg-white rounded-3xl border shadow-sm p-6">
-            <div className="flex justify-between items-center mb-5">
-              <h3 className="text-xl font-bold text-[#511D43]">
-                Business Metrics
-              </h3>
-
-              <button
-                type="button"
-                onClick={addMetric}
-                className="
-                bg-[#901E3E]
-                hover:bg-[#511D43]
-                text-white
-                px-4 py-2
-                rounded-xl
-                flex items-center gap-2
-              "
-              >
-                <Plus size={16} />
-                Add Metric
-              </button>
-            </div>
-
-            {form.metrics.map((metric, index) => (
-              <div
-                key={index}
-                className="grid md:grid-cols-[1fr_1fr_auto] gap-3 mb-3"
-              >
-                <input
-                  value={metric.label}
-                  onChange={(e) => metricChange(index, "label", e.target.value)}
-                  placeholder="Metric Label"
-                  className="input"
-                />
-
-                <input
-                  value={metric.value}
-                  onChange={(e) => metricChange(index, "value", e.target.value)}
-                  placeholder="Metric Value"
-                  className="input"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => removeMetric(index)}
-                  className="
-                  bg-red-100
-                  text-red-600
-                  rounded-xl
-                  px-4
-                "
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            ))}
-          </div>
-
           {/* FILE UPLOADS */}
 
           <div className="grid lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-3xl border shadow-sm p-6">
-              <h3 className="font-bold text-[#511D43] mb-4">Cover Image</h3>
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-5">Cover Image</h3>
 
-              <label className="border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[#901E3E] transition">
-                <ImageIcon size={40} className="text-[#901E3E]" />
+              <label
+                className="
+      border-2
+      border-dashed
+      border-slate-300
+      rounded-2xl
+      p-10
+      flex
+      flex-col
+      items-center
+      justify-center
+      cursor-pointer
+      hover:border-[#901E3E]
+      hover:bg-[#901E3E]/5
+      transition
+      "
+              >
+                <ImageIcon size={40} />
 
-                <span className="mt-3 text-sm text-slate-500">
-                  Upload Cover Image
-                </span>
+                <span className="mt-3 text-sm">Upload Cover Image</span>
 
                 <input
+                  hidden
                   type="file"
                   accept="image/*"
-                  hidden
                   onChange={(e) => setCoverImage(e.target.files[0])}
                 />
               </label>
-
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt=""
-                  className="
-                  mt-4
-                  rounded-2xl
-                  h-56
-                  w-full
-                  object-cover
-                "
-                />
-              )}
             </div>
 
-            <div className="bg-white rounded-3xl border shadow-sm p-6">
-              <h3 className="font-bold text-[#511D43] mb-4">PDF Case Study</h3>
+            <div className={cardClass}>
+              <h3 className="font-bold text-[#511D43] mb-5">PDF Case Study</h3>
 
-              <label className="border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[#901E3E] transition">
-                <Upload size={40} className="text-[#901E3E]" />
+              <label
+                className="
+      border-2
+      border-dashed
+      border-slate-300
+      rounded-2xl
+      p-10
+      flex
+      flex-col
+      items-center
+      justify-center
+      cursor-pointer
+      hover:border-[#901E3E]
+      hover:bg-[#901E3E]/5
+      transition
+      "
+              >
+                <Upload size={40} />
 
-                <span className="mt-3 text-sm text-slate-500">Upload PDF</span>
+                <span className="mt-3 text-sm">Upload PDF</span>
 
                 <input
+                  hidden
                   type="file"
                   accept=".pdf"
-                  hidden
                   onChange={(e) => setPdfFile(e.target.files[0])}
                 />
               </label>
-
-              {pdfFile && (
-                <div className="mt-4 bg-green-50 p-4 rounded-xl flex items-center gap-3">
-                  <FileText size={20} />
-
-                  <span className="text-sm font-medium">{pdfFile.name}</span>
-                </div>
-              )}
             </div>
           </div>
-
           {/* SETTINGS */}
 
           <div className="bg-white rounded-3xl border shadow-sm p-6">
@@ -692,34 +672,54 @@ transition
 
         {/* FOOTER */}
 
-        <div className="border-t bg-white p-5 flex flex-col sm:flex-row justify-end gap-3">
+        <div
+          className="
+  sticky
+  bottom-0
+  bg-white
+  border-t
+  px-6
+  py-4
+  flex
+  flex-col
+  sm:flex-row
+  justify-end
+  gap-3
+  "
+        >
           <button
             type="button"
             onClick={onClose}
             className="
-            px-6 py-3
-            rounded-xl
-            bg-slate-200
-            hover:bg-slate-300
-          "
+    px-6
+    py-3
+    rounded-xl
+    bg-slate-200
+    hover:bg-slate-300
+    "
           >
             Cancel
           </button>
 
           <button
-            onClick={submitHandler}
             disabled={saving}
+            onClick={submitHandler}
             className="
-            px-8 py-3
-            rounded-xl
-            bg-[#901E3E]
-            hover:bg-[#511D43]
-            text-white
-            transition
-            disabled:opacity-50
-          "
+    px-8
+    py-3
+    rounded-xl
+    bg-gradient-to-r
+    from-[#511D43]
+    to-[#901E3E]
+    text-white
+    font-semibold
+    shadow-lg
+    hover:shadow-xl
+    transition-all
+    disabled:opacity-50
+    "
           >
-            {saving ? "Saving..." : story ? "Update Story" : "Create Story"}
+            {saving ? "Saving..." : "Save Story"}
           </button>
         </div>
       </div>
