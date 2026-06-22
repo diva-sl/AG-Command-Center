@@ -80,6 +80,40 @@ const Users = () => {
 
       cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     },
+    {
+      header: "KYC",
+      cell: ({ row }) => {
+        const user = row.original;
+
+        const statuses = [user.panStatus, user.aadhaarStatus, user.gstinStatus];
+
+        const hasRejected = statuses.includes("rejected");
+        const hasPending = statuses.includes("pending");
+        const hasApproved = statuses.includes("approved");
+
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              hasRejected
+                ? "bg-red-100 text-red-700"
+                : hasPending
+                  ? "bg-amber-100 text-amber-700"
+                  : hasApproved
+                    ? "bg-green-100 text-green-700"
+                    : "bg-slate-100 text-slate-600"
+            }`}
+          >
+            {hasRejected
+              ? "Rejected"
+              : hasPending
+                ? "Pending"
+                : hasApproved
+                  ? "Verified"
+                  : "Not Uploaded"}
+          </span>
+        );
+      },
+    },
 
     {
       header: "Actions",

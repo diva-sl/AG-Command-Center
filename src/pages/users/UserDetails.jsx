@@ -7,6 +7,10 @@ import {
   UserCog,
   Calendar,
   CreditCard,
+  Eye,
+  Download,
+  FileText,
+  Image as ImageIcon,
 } from "lucide-react";
 
 import DashboardLayout from "../../components/layout/DashboardLayout";
@@ -47,6 +51,62 @@ const UserDetails = () => {
   const showAvatar =
     user?.avatar && !user.avatar.includes("googleusercontent.com");
 
+  const KycAdminCard = ({ title, value, status, reason }) => {
+    const styles = {
+      approved: "bg-green-100 text-green-700 border-green-200",
+
+      pending: "bg-amber-100 text-amber-700 border-amber-200",
+
+      rejected: "bg-red-100 text-red-700 border-red-200",
+
+      not_uploaded: "bg-slate-100 text-slate-600 border-slate-200",
+    };
+
+    return (
+      <div
+        className="
+        bg-white
+        rounded-3xl
+        border
+        border-[#901E3E]/10
+        p-5
+        shadow-sm
+      "
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <h4 className="font-semibold text-[#511D43]">{title}</h4>
+
+            <p className="text-sm text-slate-500 mt-1">
+              {value || "Not Provided"}
+            </p>
+          </div>
+
+          <span
+            className={`
+            px-3
+            py-1
+            rounded-full
+            text-xs
+            font-semibold
+            border
+            ${styles[status]}
+          `}
+          >
+            {status?.replace("_", " ").toUpperCase()}
+          </span>
+        </div>
+
+        {status === "rejected" && reason && (
+          <div className="mt-4 p-3 bg-red-50 rounded-xl border border-red-200">
+            <p className="text-xs font-bold text-red-700">REJECTION REASON</p>
+
+            <p className="text-sm text-red-600 mt-1">{reason}</p>
+          </div>
+        )}
+      </div>
+    );
+  };
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-slate-50 -m-6 p-4 md:p-6">
@@ -207,11 +267,11 @@ const UserDetails = () => {
 
                 <Info label="Address" value={user.address} />
 
-                <Info label="PAN Number" value={user.pan} />
+                {/* <Info label="PAN Number" value={user.pan} /> */}
 
-                <Info label="Aadhaar Number" value={user.aadhaar} />
+                {/* <Info label="Aadhaar Number" value={user.aadhaar} /> */}
 
-                <Info label="GSTIN" value={user.gstin} />
+                {/* <Info label="GSTIN" value={user.gstin} /> */}
 
                 <Info label="Role" value={user.role} />
 
@@ -232,12 +292,113 @@ const UserDetails = () => {
                 />
               </div>
             </div>
+            <div className="mt-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="
+        w-12
+        h-12
+        rounded-xl
+        bg-gradient-to-r
+        from-[#511D43]
+        to-[#901E3E]
+        text-white
+        flex
+        items-center
+        justify-center
+      "
+                >
+                  <CreditCard size={20} />
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-semibold text-[#511D43]">
+                    KYC Information
+                  </h2>
+
+                  <p className="text-slate-500 text-sm">
+                    User submitted KYC details
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-5">
+                <Info label="PAN Number" value={user.pan} />
+
+                <Info label="Aadhaar Number" value={user.aadhaar} />
+
+                <Info label="GSTIN" value={user.gstin} />
+              </div>
+            </div>
+            <div className="mt-8">
+              <h2 className="text-xl font-bold text-[#511D43] mb-5">
+                KYC Verification
+              </h2>
+
+              <div className="grid md:grid-cols-3 gap-5">
+                <KycAdminCard
+                  title="PAN"
+                  status={user.panStatus}
+                  reason={user.panRejectReason}
+                />
+
+                <KycAdminCard
+                  title="AADHAAR"
+                  status={user.aadhaarStatus}
+                  reason={user.aadhaarRejectReason}
+                />
+
+                <KycAdminCard
+                  title="GSTIN"
+                  status={user.gstinStatus}
+                  reason={user.gstinRejectReason}
+                />
+              </div>
+            </div>
+            <div className="mt-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="
+        w-12
+        h-12
+        rounded-xl
+        bg-gradient-to-r
+        from-[#511D43]
+        to-[#901E3E]
+        text-white
+        flex
+        items-center
+        justify-center
+      "
+                >
+                  <CreditCard size={20} />
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-semibold text-[#511D43]">
+                    Uploaded Documents
+                  </h2>
+
+                  <p className="text-slate-500 text-sm">
+                    Documents uploaded by the user
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {user?.documents?.map((doc) => (
+                  <DocumentPreviewCard key={doc._id} doc={doc} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </DashboardLayout>
   );
 };
+
+export default UserDetails;
 
 const StatCard = ({ icon, label, value }) => (
   <div className="bg-slate-50 rounded-2xl p-4 border">
@@ -258,4 +419,128 @@ const Info = ({ label, value }) => (
   </div>
 );
 
-export default UserDetails;
+const DocumentPreviewCard = ({ doc }) => {
+  const isImage = doc?.mimeType?.startsWith("image/");
+
+  const isPdf = doc?.mimeType === "application/pdf";
+
+  return (
+    <div
+      className="
+        bg-white
+        border
+        border-[#901E3E]/10
+        rounded-3xl
+        overflow-hidden
+        shadow-sm
+      "
+    >
+      <div className="h-52 bg-slate-100">
+        {isImage ? (
+          <img
+            src={doc.fileUrl}
+            alt={doc.fileName}
+            className="
+              w-full
+              h-full
+              object-cover
+            "
+          />
+        ) : isPdf ? (
+          <iframe
+            src={doc.fileUrl}
+            title={doc.fileName}
+            className="
+              w-full
+              h-full
+            "
+          />
+        ) : (
+          <div
+            className="
+              h-full
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
+          >
+            <FileText size={50} className="text-[#901E3E]" />
+
+            <p className="mt-2 text-sm text-slate-500">{doc.fileName}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="p-5">
+        <div className="flex justify-between items-center">
+          <h4 className="font-semibold text-[#511D43]">{doc.type}</h4>
+
+          <span
+            className={`
+              px-3
+              py-1
+              rounded-full
+              text-xs
+              font-semibold
+              ${
+                doc.status === "approved"
+                  ? "bg-green-100 text-green-700"
+                  : doc.status === "rejected"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-amber-100 text-amber-700"
+              }
+            `}
+          >
+            {doc.status}
+          </span>
+        </div>
+
+        <p className="text-sm text-slate-500 mt-2 truncate">{doc.fileName}</p>
+
+        <div className="flex gap-2 mt-5">
+          <a
+            href={doc.fileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="
+              flex-1
+              flex
+              items-center
+              justify-center
+              gap-2
+              py-2.5
+              rounded-xl
+              bg-gradient-to-r
+              from-[#511D43]
+              to-[#901E3E]
+              text-white
+              text-sm
+              font-medium
+            "
+          >
+            <Eye size={16} />
+            View
+          </a>
+
+          <a
+            href={doc.fileUrl}
+            download
+            className="
+              w-11
+              h-11
+              rounded-xl
+              border
+              flex
+              items-center
+              justify-center
+              hover:bg-slate-100
+            "
+          >
+            <Download size={16} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};

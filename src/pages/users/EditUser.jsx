@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { ArrowLeft, UserCog } from "lucide-react";
+import {
+  CreditCard,
+  ShieldCheck,
+  FileCheck,
+  Eye,
+  Download,
+  BadgeCheck,
+  XCircle,
+  Clock3,
+  ArrowLeft,
+  Shield,
+  UserCog,
+} from "lucide-react";
 
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import Loader from "../../components/common/Loader";
@@ -34,6 +46,14 @@ const EditUser = () => {
     subscription: "none",
     subscriptionExpiry: "",
     isBlocked: false,
+    panStatus: "",
+    panRejectReason: "",
+
+    aadhaarStatus: "",
+    aadhaarRejectReason: "",
+
+    gstinStatus: "",
+    gstinRejectReason: "",
   });
 
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -54,6 +74,14 @@ const EditUser = () => {
           ? user.subscriptionExpiry.split("T")[0]
           : "",
         isBlocked: user.isBlocked || false,
+        panStatus: user.panStatus || "not_uploaded",
+        panRejectReason: user.panRejectReason || "",
+
+        aadhaarStatus: user.aadhaarStatus || "not_uploaded",
+        aadhaarRejectReason: user.aadhaarRejectReason || "",
+
+        gstinStatus: user.gstinStatus || "not_uploaded",
+        gstinRejectReason: user.gstinRejectReason || "",
       });
     }
   }, [user]);
@@ -200,7 +228,6 @@ const EditUser = () => {
               </div>
             </div>
           </div>
-
           {/* Personal Information */}
           <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#901E3E]/10 mb-6">
             <h2 className="text-xl font-semibold text-[#511D43] mb-6">
@@ -238,15 +265,40 @@ const EditUser = () => {
               />
             </div>
           </div>
-
           {/* KYC Information */}
           <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#901E3E]/10 mb-6">
-            <h2 className="text-xl font-semibold text-[#511D43] mb-6">
-              KYC Information
-            </h2>
+            <div className="flex items-center gap-3 mb-6">
+              <div
+                className="
+        w-12
+        h-12
+        rounded-xl
+        bg-gradient-to-r
+        from-[#511D43]
+        to-[#901E3E]
+        text-white
+        flex
+        items-center
+        justify-center
+      "
+              >
+                <BadgeCheck size={20} />
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div>
+                <h2 className="text-xl font-semibold text-[#511D43]">
+                  KYC Details
+                </h2>
+
+                <p className="text-slate-500 text-sm">
+                  Update PAN, Aadhaar and GST information.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-5">
               <Input
+                icon={<CreditCard size={18} />}
                 label="PAN Number"
                 name="pan"
                 value={formData.pan}
@@ -254,6 +306,7 @@ const EditUser = () => {
               />
 
               <Input
+                icon={<ShieldCheck size={18} />}
                 label="Aadhaar Number"
                 name="aadhaar"
                 value={formData.aadhaar}
@@ -261,6 +314,7 @@ const EditUser = () => {
               />
 
               <Input
+                icon={<FileCheck size={18} />}
                 label="GSTIN"
                 name="gstin"
                 value={formData.gstin}
@@ -268,7 +322,41 @@ const EditUser = () => {
               />
             </div>
           </div>
+          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#901E3E]/10 mb-6">
+            <h2 className="text-xl font-semibold text-[#511D43] mb-6">
+              KYC Review Status
+            </h2>
 
+            <div className="grid lg:grid-cols-3 gap-5">
+              <AdminKycReviewCard
+                title="PAN Card"
+                icon={<CreditCard size={20} />}
+                status={formData.panStatus}
+                reason={formData.panRejectReason}
+                document={user?.documents?.find((d) => d.type === "PAN_CARD")}
+              />
+
+              <AdminKycReviewCard
+                title="Aadhaar Card"
+                icon={<ShieldCheck size={20} />}
+                status={formData.aadhaarStatus}
+                reason={formData.aadhaarRejectReason}
+                document={user?.documents?.find(
+                  (d) => d.type === "AADHAAR_CARD",
+                )}
+              />
+
+              <AdminKycReviewCard
+                title="GST Certificate"
+                icon={<FileCheck size={20} />}
+                status={formData.gstinStatus}
+                reason={formData.gstinRejectReason}
+                document={user?.documents?.find(
+                  (d) => d.type === "GST_CERTIFICATE",
+                )}
+              />
+            </div>
+          </div>
           {/* Account Settings */}
           <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#901E3E]/10">
             <h2 className="text-xl font-semibold text-[#511D43] mb-6">
@@ -360,7 +448,6 @@ const EditUser = () => {
               </label>
             </div>
           </div>
-
           {/* Footer Actions */}
           <div className="mt-8">
             <div
@@ -424,9 +511,14 @@ const EditUser = () => {
   );
 };
 
-const Input = ({ label, name, value, onChange, type = "text" }) => (
+export default EditUser;
+
+const Input = ({ icon, label, name, value, onChange, type = "text" }) => (
   <div>
-    <label className="block text-sm font-medium mb-2">{label}</label>
+    <label className="flex items-center gap-2 text-sm font-medium mb-2 text-slate-700">
+      {icon}
+      {label}
+    </label>
 
     <input
       type={type}
@@ -436,15 +528,150 @@ const Input = ({ label, name, value, onChange, type = "text" }) => (
       className="
         w-full
         border
+        border-slate-300
         rounded-xl
         px-4
         py-3
         focus:outline-none
         focus:ring-2
         focus:ring-[#901E3E]
+        focus:border-[#901E3E]
       "
     />
   </div>
 );
 
-export default EditUser;
+const AdminKycReviewCard = ({ title, icon, status, reason, document }) => {
+  const statusConfig = {
+    approved: {
+      color: "bg-green-100 text-green-700",
+      icon: <BadgeCheck size={14} />,
+      label: "Approved",
+    },
+
+    rejected: {
+      color: "bg-red-100 text-red-700",
+      icon: <XCircle size={14} />,
+      label: "Rejected",
+    },
+
+    pending: {
+      color: "bg-amber-100 text-amber-700",
+      icon: <Clock3 size={14} />,
+      label: "Pending",
+    },
+
+    not_uploaded: {
+      color: "bg-slate-100 text-slate-600",
+      icon: <Clock3 size={14} />,
+      label: "Not Uploaded",
+    },
+  };
+
+  const current = statusConfig[status] || statusConfig.not_uploaded;
+
+  return (
+    <div
+      className="
+        border
+        border-[#901E3E]/10
+        rounded-3xl
+        p-5
+        bg-white
+      "
+    >
+      <div className="flex justify-between">
+        <div className="flex items-center gap-3">
+          <div
+            className="
+              w-12
+              h-12
+              rounded-xl
+              bg-gradient-to-r
+              from-[#511D43]
+              to-[#901E3E]
+              text-white
+              flex
+              items-center
+              justify-center
+            "
+          >
+            {icon}
+          </div>
+
+          <h4 className="font-semibold text-[#511D43]">{title}</h4>
+        </div>
+
+        <span
+          className={`
+            flex
+            items-center
+            gap-1
+            px-3
+            py-1
+            rounded-full
+            text-xs
+            font-semibold
+            ${current.color}
+          `}
+        >
+          {current.icon}
+          {current.label}
+        </span>
+      </div>
+
+      {document?.fileUrl && (
+        <div className="flex gap-2 mt-5">
+          <a
+            href={document.fileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="
+              flex-1
+              flex
+              items-center
+              justify-center
+              gap-2
+              py-2.5
+              rounded-xl
+              bg-gradient-to-r
+              from-[#511D43]
+              to-[#901E3E]
+              text-white
+              text-sm
+              font-medium
+            "
+          >
+            <Eye size={16} />
+            View
+          </a>
+
+          <a
+            href={document.fileUrl}
+            download
+            className="
+              w-11
+              h-11
+              rounded-xl
+              border
+              flex
+              items-center
+              justify-center
+              hover:bg-slate-50
+            "
+          >
+            <Download size={16} />
+          </a>
+        </div>
+      )}
+
+      {reason && (
+        <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-100">
+          <p className="text-xs font-semibold text-red-700">Rejection Reason</p>
+
+          <p className="text-sm text-red-600 mt-1">{reason}</p>
+        </div>
+      )}
+    </div>
+  );
+};

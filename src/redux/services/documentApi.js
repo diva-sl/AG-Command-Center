@@ -21,12 +21,13 @@ export const documentApi = baseApi.injectEndpoints({
     }),
 
     rejectDocument: builder.mutation({
-      query: (id) => ({
+      query: ({ id, reason }) => ({
         url: `/admin/documents/${id}/reject`,
         method: "PATCH",
+        data: {
+          reason,
+        },
       }),
-
-      invalidatesTags: ["Documents"],
     }),
   }),
 });
