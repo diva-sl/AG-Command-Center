@@ -205,6 +205,7 @@ const Documents = () => {
               <option value="GST_CERTIFICATE">GST Certificate</option>
 
               <option value="ITR">ITR</option>
+              <option value="BANK_STATEMENT">BANK_STATEMENT</option>
 
               <option value="OTHER">Other</option>
             </select>

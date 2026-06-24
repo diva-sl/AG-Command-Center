@@ -7,6 +7,16 @@ import { User, Mail, ShieldCheck, Calendar, Settings } from "lucide-react";
 const AdminProfile = () => {
   const { admin } = useSelector((state) => state.auth);
 
+  const [avatarError, setAvatarError] = useState(false);
+
+  const initials =
+    admin?.name
+      ?.split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "A";
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-slate-50 -m-6 p-4 md:p-6">
@@ -38,27 +48,52 @@ const AdminProfile = () => {
             "
           >
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <img
-                src={
-                  admin?.avatar ||
-                  `https://ui-avatars.com/api/?name=${admin?.name}&background=511D43&color=fff`
-                }
-                alt={admin?.name}
-                className="
-                  w-28
-                  h-28
-                  md:w-32
-                  md:h-32
-                  rounded-full
-                  border-4
-                  border-white
-                  shadow-xl
-                  bg-white
-                  object-cover
-                  shrink-0
-                "
-              />
-
+              {admin?.avatar && !avatarError ? (
+                <img
+                  src={admin.avatar}
+                  alt={admin.name}
+                  onError={() => setAvatarError(true)}
+                  className="
+      w-28
+      h-28
+      md:w-32
+      md:h-32
+      rounded-full
+      border-4
+      border-white
+      shadow-xl
+      bg-white
+      object-cover
+      shrink-0
+    "
+                />
+              ) : (
+                <div
+                  className="
+      w-28
+      h-28
+      md:w-32
+      md:h-32
+      rounded-full
+      border-4
+      border-white
+      shadow-xl
+      bg-gradient-to-r
+      from-[#511D43]
+      to-[#901E3E]
+      text-white
+      flex
+      items-center
+      justify-center
+      text-3xl
+      md:text-4xl
+      font-bold
+      shrink-0
+    "
+                >
+                  {initials}
+                </div>
+              )}
               <div className="text-center md:text-left text-white">
                 <h2 className="text-2xl md:text-3xl font-bold break-words">
                   {admin?.name}

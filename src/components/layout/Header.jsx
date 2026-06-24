@@ -29,6 +29,16 @@ const Header = ({ setSidebarOpen }) => {
 
   const { admin } = useSelector((state) => state.auth);
 
+  const [avatarError, setAvatarError] = useState(false);
+
+  const initials =
+    admin?.name
+      ?.split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "A";
+
   const today = new Date().toLocaleDateString("en-IN", {
     weekday: "long",
     day: "numeric",
@@ -162,21 +172,42 @@ const Header = ({ setSidebarOpen }) => {
       transition-all
     "
               >
-                <img
-                  src={
-                    admin?.avatar ||
-                    `https://ui-avatars.com/api/?name=${admin?.name}&background=511D43&color=fff`
-                  }
-                  alt={admin?.name}
-                  className="
-        w-11
-        h-11
-        rounded-full
-        border-2
-        border-[#901E3E]/20
-      "
-                />
-
+                <div className="w-11 h-11 relative">
+                  {admin?.avatar && !avatarError ? (
+                    <img
+                      src={admin.avatar}
+                      alt={admin.name}
+                      onError={() => setAvatarError(true)}
+                      className="
+      w-11 h-11
+      rounded-full
+      object-cover
+      border-2
+      border-[#901E3E]/20
+    "
+                    />
+                  ) : (
+                    <div
+                      className="
+      w-11 h-11
+      rounded-full
+      bg-gradient-to-r
+      from-[#511D43]
+      to-[#901E3E]
+      text-white
+      flex
+      items-center
+      justify-center
+      font-semibold
+      text-sm
+      border-2
+      border-[#901E3E]/20
+    "
+                    >
+                      {initials}
+                    </div>
+                  )}
+                </div>
                 <div className="hidden md:block text-left">
                   <p className="font-semibold text-[#511D43] leading-none">
                     {admin?.name}
